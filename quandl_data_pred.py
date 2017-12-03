@@ -47,7 +47,7 @@ FEATURES =  ['DE Ratio',
              'Shares Short (prior ']
 
 def Build_Data_Set():
-    data_df = pd.DataFrame.from_csv("key_stats_acc_WITH_NA.csv")
+    data_df = pd.DataFrame.from_csv("key_stats_acc_NO_NA.csv")
     data_df = data_df.reindex(np.random.permutation(data_df.index))
     data_df = data_df.replace("NaN",0).replace("N/A",0)
     X = np.array(data_df[FEATURES].values).tolist()
@@ -57,24 +57,53 @@ def Build_Data_Set():
 
     X = preprocessing.scale(X)
 
-    return X,y
+    Z = np.array(data_df[["stock_p_change","sp500_p_change"]])
+    Z = np.nan_to_num(Z)
+    return X,y,Z
 
 def Analysis():
 
     test_size = 1000
 
-    X, y = Build_Data_Set()
+    invest_amount = 10000
+    total_invests = 0
+    if_market = 0
+    if_strat = 0
+
+    X, y, Z = Build_Data_Set()
     print(len(X))
     clf = svm.SVC(kernel="linear", C=1.0)
     clf.fit(X[:-test_size],y[:-test_size])
-
     correct_count = 0.00
 
     for x in range(1, test_size + 1):
         if clf.predict(X[-x].reshape(1,-1))[0] == y[-x]:
             correct_count += 1
-        if 
+        if clf.predict(X[-x].reshape(1,-1))[0] == 1:
+            invest_return = invest_amount * (Z[-x][0]/100)
+            market_return = invest_amount * (Z[-x][1]/100)
+
+            total_invests += 1
+            if_market += market_return
+            if_strat += invest_return
+
+    print("Total Trades:",total_invests)
+    print("If invested:", if_strat)
+    print("If market", if_market)
     print("Correct Count: ",correct_count,"Test Size: ",float(test_size))
     print("Accuracy:", (correct_count/test_size) * 100.00)
+
+    compared = ((if_strat - if_market) / if_market) * 100.0
+    do_nothing = total_invests * invest_amount
+
+    avg_market = ((if_market - do_nothing) / do_nothing) * 100.0
+    avg_strat = ((if_strat - do_nothing) / do_nothing) * 100.0
+
+
+
+    print("Compared to market, we earn",str(compared)+"% more")
+    print("Average investment return:", str(avg_strat)+"%")
+    print("Average market return:", str(avg_market)+"%")
+
 
 Analysis()
