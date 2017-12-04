@@ -63,7 +63,7 @@ def Build_Data_Set():
 
 def Analysis():
 
-    test_size = 9000
+    test_size = 1000
 
     invest_amount = 10000
     total_invests = 0
