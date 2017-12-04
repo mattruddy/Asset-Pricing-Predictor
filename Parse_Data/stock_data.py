@@ -108,8 +108,9 @@ def Key_Stats(gather=["Total Debt/Equity (mrq)",
             for file in each_file:
                 date_stamp = datetime.strptime(file, '%Y%m%d%H%M%S.html')
                 unix_time = time.mktime(date_stamp.timetuple())
+                print(each_dir)
                 full_file_path = each_dir+'/'+file
-                source = open(full_file_path,'r').read()
+                source = open(full_file_path,"r").read()
                 try:
                     value_list = []
 
