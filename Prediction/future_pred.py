@@ -47,7 +47,7 @@ FEATURES =  ['DE Ratio',
              'Shares Short (prior ']
 
 def Build_Data_Set():
-    data_df = pd.DataFrame.from_csv("Data/key_stats_acc_NO_NA.csv")
+    data_df = pd.DataFrame.from_csv("Data/key_stats_acc_WITH_NA.csv")
     data_df = data_df.reindex(np.random.permutation(data_df.index))
     data_df = data_df.replace("NaN",0).replace("N/A",0)
     X = np.array(data_df[FEATURES].values).tolist()
@@ -63,7 +63,7 @@ def Build_Data_Set():
 
 def Analysis():
 
-    test_size = 1000
+    test_size = 9000
 
     invest_amount = 10000
     total_invests = 0
@@ -106,7 +106,22 @@ def Analysis():
     print("Average investment return:", str(avg_strat)+"%")
     print("Average market return:", str(avg_market)+"%")
 
-    data_df = pd.DataFrame.from_csv("pull_data.")
+    data_df = pd.DataFrame.from_csv("Data/pull_data_W_NA.csv")
+    data_df = data_df.replace("NaN",-99999).replace("N/A",-99999)
+    X = preprocessing.scale(X)
+    X = np.array(data_df[FEATURES].values).tolist()
+    X = np.nan_to_num(X)
+
+    Z = data_df["Ticker"].values.tolist()
+
+    invest_list = []
+
+    for i in range(len(X)):
+        p = clf.predict(X[i].reshape(1,-1))[0]
+        if p == 1:
+            invest_list.append(Z[i])
+    print("Companies expected to outperform in the next year:",invest_list)
+    print(len(invest_list))
 
 
 Analysis()

@@ -124,7 +124,7 @@ def Key_Stats(gather=["Total Debt/Equity (mrq)",
             else:
                 df = df.append({'Date': "N/A",
                                 'Unix': "N/A",
-                                'Ticker': "N/A",
+                                'Ticker':ticker,
                                 'Price': "N/A",
                                 'stock_p_change': "N/A",
                                 'SP500': "N/A",
@@ -168,5 +168,5 @@ def Key_Stats(gather=["Total Debt/Equity (mrq)",
                                 'Status':"status",},ignore_index = True)
         except Exception as e:
             pass
-    print("Data/pull_data_NO_NA.csv")
-    df.to_csv("Data/pull_data_NO_NA.csv")
+    print("Data/pull_data_W_NA.csv")
+    df.to_csv("Data/pull_data_W_NA.csv")
