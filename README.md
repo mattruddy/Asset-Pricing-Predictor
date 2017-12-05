@@ -14,4 +14,5 @@ RESULTS:
 DATA:
 
 -The testing data is taken off of Yahoo Finance and dating back to the year 2000.
+
 -present data is also taken off of Yahoo Finance for future predictions.
