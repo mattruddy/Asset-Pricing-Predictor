@@ -44,13 +44,20 @@ FEATURES =  ['DE Ratio',
              'Shares Short (as of',
              'Short Ratio',
              'Short % of Float',
-             'Shares Short (prior ']
+             'Shares Short (prior ',
+             'Company Type']
 
 def Build_Data_Set():
-    data_df = pd.DataFrame.from_csv("Data/key_stats_acc_WITH_NA.csv")
+    data_df = pd.DataFrame.from_csv("Data/key_stats_acc_WITH_TYPE_NA.csv")
+    data_df = data_df.replace("Energy",0).replace("Consumer Discretionary",1).replace("Financials",2).replace("Consumer Staples",3).replace("Information Technology",4).replace("Industrials",5).replace("Health Care",6).replace("Real Estate",7).replace("Utilities",8).replace("Materials",9).replace("Telecommunication Services",10)
     data_df = data_df.reindex(np.random.permutation(data_df.index))
-    data_df = data_df.replace("NaN",0).replace("N/A",0)
-    X = np.array(data_df[FEATURES].values).tolist()
+    # hi = hi.replace("NaN",0).replace("N/A",0)
+
+    #figure out tomorrow
+
+    ######################
+    # time.sleep(1500)
+    X = np.array(data_df[FEATURES]).tolist()
     X = np.nan_to_num(X)
 
     y = (data_df["Status"].replace("underperform",0).replace("outperform",1).values.tolist())
@@ -107,7 +114,7 @@ def Analysis():
     print("Average market return:", str(avg_market)+"%")
 
     data_df = pd.DataFrame.from_csv("Data/pull_data_W_NA.csv")
-    data_df = data_df.replace("NaN",-99999).replace("N/A",-99999)
+    data_df = data_df.replace("Energy",0).replace("Consumer Discretionary",1).replace("Financials",2).replace("Consumer Staples",3).replace("Information Technology",4).replace("Industrials",5).replace("Health Care",6).replace("Real Estate",7).replace("Utilities",8).replace("Materials",9).replace("Telecommunication Services",10)
     X = preprocessing.scale(X)
     X = np.array(data_df[FEATURES].values).tolist()
     X = np.nan_to_num(X)
@@ -119,9 +126,10 @@ def Analysis():
     for i in range(len(X)):
         p = clf.predict(X[i].reshape(1,-1))[0]
         if p == 1:
-            invest_list.append(Z[i])
-    print("Companies expected to outperform in the next year:",invest_list)
+             invest_list.append('Buy: '+Z[i])
+    print("Projected One-Year outperformers: ",invest_list)
     print(len(invest_list))
+
 
 
 Analysis()

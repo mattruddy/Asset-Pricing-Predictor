@@ -46,6 +46,7 @@ def Key_Stats(gather=["Total Debt/Equity (mrq)",
                       'Shares Short (as of',
                       'Short Ratio',
                       'Short % of Float',
+                      'Company Type',
                       'Shares Short (prior ']):
     # statspath = path+'/_KeyStats'
     # stock_list = [x[0] for x in os.walk(statspath)]
@@ -92,6 +93,7 @@ def Key_Stats(gather=["Total Debt/Equity (mrq)",
                                 'Short Ratio',
                                 'Short % of Float',
                                 'Shares Short (prior ',
+                                'Company Type',
                                 'Status'])
 
 
@@ -121,6 +123,20 @@ def Key_Stats(gather=["Total Debt/Equity (mrq)",
                     value_list.append(value)
             if value_list.count("N/A") > 15:
                 pass
+
+            file_list2 = os.listdir("/Users/mattruddy/Desktop/intraQuarter/_KeyStats")
+            for each_file in file_list2[1:]:
+                ticker1 = each_file.split(".html")[0]
+                try:
+                    full_file_path2 = "/Users/mattruddy/Desktop/intraQuarter/List of S&P 500 companies - Wikipedia.htm"
+                    source = open(full_file_path2,"r").read()
+                except Exception as e:
+                    pass
+                try:
+                    comp_type = source.split('href="https://www.sec.gov/cgi-bin/browse-edgar?CIK='+ticker.upper()+'&amp;action=getcompany">reports</a></td>\n<td>')[1].split('</td>')[0]
+                except Exception as e:
+                    pass
+
             else:
                 df = df.append({'Date': "N/A",
                                 'Unix': "N/A",
@@ -165,6 +181,7 @@ def Key_Stats(gather=["Total Debt/Equity (mrq)",
                                 'Short Ratio':value_list[32],
                                 'Short % of Float':value_list[33],
                                 'Shares Short (prior ':value_list[34],
+                                'Company Type':comp_type,
                                 'Status':"status",},ignore_index = True)
         except Exception as e:
             pass
